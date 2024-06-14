@@ -8,7 +8,6 @@ const ProductForm = ({
 	opt,
 	setOpt,
 }) => {
-	console.log(opt);
 	return (
 		<Grid
 			container
@@ -17,7 +16,37 @@ const ProductForm = ({
 		>
 			<Grid
 				item
-				xs={12}
+				xs={2}
+				sm={3}
+				md={3}
+			>
+				<CusInput
+					name="code"
+					label="Product Code"
+					required={true}
+					placeholder={'C1A'}
+					value={form.values.code}
+					onChange={form.handleChange}
+					onBlur={form.handleBlur}
+					error={form.errors.code}
+					touch={form.touched.code}
+					disabled={disabled}
+					startAdornment={
+						<Typography
+							fontSize={12}
+							color={'#CCCCCC'}
+						>
+							e.g.
+						</Typography>
+					}
+				/>
+			</Grid>
+
+			<Grid
+				item
+				xs={4}
+				sm={5}
+				md={9}
 			>
 				<CusInput
 					name="name"
@@ -94,7 +123,7 @@ const ProductForm = ({
 					label="Options"
 					placeholder={'Type and click enter to add options.'}
 					onChange={(event, value) => {
-						// form.setFieldValue('options', value);
+						form.setFieldValue('options', value);
 						setOpt(value);
 					}}
 					onBlur={form.handleBlur}
@@ -190,6 +219,26 @@ const ProductForm = ({
 							₱
 						</Typography>
 					}
+				/>
+			</Grid>
+			<Grid
+				item
+				xs={12}
+			>
+				<CusInput
+					name="image"
+					label="Product Image"
+					placeholder={'Image'}
+					onChange={(e) => {
+						form.setFieldValue('image', e.target.files[0]);
+						console.log(e.target.files[0]);
+					}}
+					onBlur={form.handleBlur}
+					error={form.errors.image}
+					touch={form.touched.image}
+					disabled={disabled}
+					type={'file'}
+					required={true}
 				/>
 			</Grid>
 		</Grid>

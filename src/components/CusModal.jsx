@@ -5,6 +5,7 @@ import {
 	Divider,
 	IconButton,
 	Stack,
+	Button,
 } from '@mui/material';
 import CusButton from './CusButton';
 import { CloseRounded } from '@mui/icons-material';
@@ -27,6 +28,11 @@ const CusModal = ({
 		setOpt([]);
 	};
 
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		form.handleSubmit();
+	};
+
 	const style = {
 		position: 'absolute',
 		top: '50%',
@@ -47,7 +53,7 @@ const CusModal = ({
 				onClose={handleClose}
 				style={{ overflow: 'scroll', height: '100%' }}
 			>
-				<form onSubmit={form.handleSubmit}>
+				<form onSubmit={handleSubmit}>
 					<Stack
 						sx={style}
 						gap={2}
@@ -121,11 +127,21 @@ const CusModal = ({
 									action={handleClose}
 								/>
 
-								<CusButton
-									label={'Save'}
+								<Button
 									type={'submit'}
-									variant={'primary'}
-								/>
+									sx={{
+										backgroundColor: colors.primary,
+										color: colors.background,
+										'&:hover': {
+											backgroundColor: '#480C0B',
+										},
+										boxShadow:
+											'0px 0px 8px rgba(217, 217, 217, 1)',
+										padding: '7px 15px',
+									}}
+								>
+									Save
+								</Button>
 							</Stack>
 						</Stack>
 					</Stack>

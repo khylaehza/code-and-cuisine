@@ -49,7 +49,7 @@ const CusMultiple = ({
 					onBlur={onBlur}
 					value={value}
 					multiple
-					id={name}
+					name={name}
 					fullWidth
 					options={options}
 					freeSolo
