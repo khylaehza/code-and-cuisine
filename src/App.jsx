@@ -8,6 +8,34 @@ function App() {
 			color: '#1C3055',
 		},
 		components: {
+			MuiInputBase: {
+				styleOverrides: {
+					root: {
+						borderRadius: '4px',
+						fontSize: 14,
+						boxShadow: '0px 0px 2px rgba(76, 96, 133, 0.6)',
+						backgroundColor: '#FFF',
+						'&.MuiInputBase-input': {
+							borderRadius: 'inherit',
+							fontSize: 'inherit',
+							boxShadow: 'inherit',
+						},
+						'&.Mui-focused': {
+							border: '1px solid rgba(216, 161, 26, 0.3)',
+						},
+						'&:hover': {
+							border: '1px solid rgba(216, 161, 26, 0.3)',
+						},
+					},
+
+					input: {
+						'&::placeholder': {
+							color: 'rgba(158, 158, 158, 1)',
+						},
+					},
+				},
+			},
+
 			MuiFormLabel: {
 				styleOverrides: {
 					asterisk: { color: '#BB0406', fontWeight: 'normal' },
@@ -16,9 +44,8 @@ function App() {
 			MuiSelect: {
 				styleOverrides: {
 					root: {
-						borderRadius: '6px',
 						'& fieldset.MuiOutlinedInput-notchedOutline': {
-							borderColor: 'rgba(28, 48, 85, 0.3)',
+							border: 'none',
 						},
 					},
 				},
@@ -27,8 +54,7 @@ function App() {
 				styleOverrides: {
 					root: {
 						'&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-							borderColor: 'black',
-							borderWidth: '1px',
+							border: 'none',
 						},
 					},
 					input: {

@@ -5,9 +5,9 @@ const OrderPage = () => {
 		<Body
 			content={
 				<Box
-					component="main"
+					direction="column"
+					gap={4}
 					width={'100%'}
-					height={'100vh'}
 				>
 					<Typography color={'black'}>order</Typography>
 				</Box>

@@ -91,13 +91,13 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 				location.pathname == '/' ? (
 					<DashboardRounded sx={{ color: colors.secondary }} />
 				) : (
-					<DashboardOutlined sx={{ color: colors.accent }} />
+					<DashboardOutlined sx={{ color: colors.shadow }} />
 				),
 			action: () => {
 				navigate('/');
 			},
 			location: '/',
-			color: location.pathname == '/' ? colors.secondary : colors.accent,
+			color: location.pathname == '/' ? colors.secondary : colors.shadow,
 		},
 		{
 			name: 'Order',

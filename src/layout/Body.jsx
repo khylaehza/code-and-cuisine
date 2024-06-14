@@ -1,4 +1,4 @@
-import { Box, CssBaseline, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { useState } from 'react';
 import { colors } from '../themes';
 import SideNav from './SideNav';
@@ -19,6 +19,7 @@ const Body = ({ content }) => {
 			display={'flex'}
 			bgcolor={colors.background}
 			height={'100%'}
+			width={'100vw'}
 		>
 			<SideNav
 				sideNavWidth={sideNavWidth}
@@ -27,7 +28,15 @@ const Body = ({ content }) => {
 				sideNavOpen={sideNavOpen}
 			/>
 
-			{content}
+			<Box
+				component="main"
+				width={'100%'}
+				height={'100vh'}
+				p={5}
+				display={'flex'}
+			>
+				{content}
+			</Box>
 		</Box>
 	);
 };
