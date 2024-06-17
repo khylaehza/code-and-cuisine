@@ -1,6 +1,6 @@
 # Code and Cuisine
 
-Code and Cuisine is a React-Firebase application built with Vite. It allows merchants to create, edit, and manage their menu items efficiently. The app includes various features such as side navigation, search, filter, sort, image management, product printing, and deletion.
+[Code and Cuisine](https://code-and-cuisine-ten.vercel.app/) is a React-Firebase application built with Vite. It allows merchants to create, edit, and manage their menu items efficiently. The app includes various features such as side navigation, search, filter, sort, image management, product printing, and deletion.
 
 ## Features
 
