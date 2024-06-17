@@ -2,19 +2,49 @@ import { Typography, Stack } from '@mui/material';
 import { Body } from '../layout';
 import { colors } from '../themes';
 import {
-	CusButton,
 	CusSearch,
 	CusSelect,
 	CusTable,
-	CusModal,
+	CusToast,
+	CusDownload,
 } from '../components';
-import { PrintOutlined } from '@mui/icons-material';
-import { AddProducts } from '../modals';
+import { AddProducts, EditProducts, DeleteProducts } from '../modals';
+
+import { useData } from '../DataContext';
+import { useState } from 'react';
+
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
+
 const ProductsPage = () => {
 	return <Body content={<Content />} />;
 };
 
 const Content = () => {
+	const [curSearch, setCurSearch] = useState('');
+	const { products, curRow, setCurRow } = useData();
+	const [category, setCategory] = useState('All');
+	const [availability, setAvailability] = useState('Available');
+	const [openDel, setOpenDel] = useState(false);
+	const [openEdit, setOpenEdit] = useState(false);
+
+	const [openToast, setOpenToast] = useState(false);
+	const [variant, setVariant] = useState('');
+	const [message, setMessage] = useState('');
+
+	const [sortType, setSortType] = useState('Ascending');
+	const [anchorEl, setAnchorEl] = useState(null);
+
+	const categoryBy = [
+		'Appetizers',
+		'Breads',
+		'Main Courses',
+		'Desserts',
+		'Beverages',
+		'All',
+	];
+	const availabilityBy = ['Available', 'Not Available', 'All'];
+
 	function createData(
 		id,
 		name,
@@ -24,7 +54,7 @@ const Content = () => {
 		stocks,
 		cost,
 		price,
-		discounts
+		discount
 	) {
 		return {
 			id,
@@ -35,100 +65,60 @@ const Content = () => {
 			stocks,
 			cost,
 			price,
-			discounts,
+			discount,
 		};
 	}
 
-	const rows = [
-		createData(
-			1,
-			'Cupcake',
-			'Image',
-			'Category',
-			'Options',
-			335,
-			3.7,
-			67,
-			4.3
-		),
-		createData(
-			2,
-			'aupcake',
-			'Image',
-			'Category',
-			'Options',
-			305,
-			3.7,
-			67,
-			4.3
-		),
-		createData(
-			3,
-			'aupcake',
-			'Image',
-			'Category',
-			'Options',
-			305,
-			3.7,
-			67,
-			4.3
-		),
-		createData(
-			4,
-			'aupcake',
-			'Image',
-			'Category',
-			'Options',
-			305,
-			3.7,
-			67,
-			4.3
-		),
-		createData(
-			5,
-			'aupcake',
-			'Image',
-			'Category',
-			'Options',
-			305,
-			3.7,
-			67,
-			4.3
-		),
-		createData(
-			6,
-			'aupcake',
-			'Image',
-			'Category',
-			'Options',
-			305,
-			3.7,
-			67,
-			4.3
-		),
-		createData(
-			7,
-			'aupcake',
-			'Image',
-			'Category',
-			'Options',
-			305,
-			3.7,
-			67,
-			4.3
-		),
-		createData(
-			8,
-			'aupcake',
-			'Image',
-			'Category',
-			'Options',
-			305,
-			3.7,
-			67,
-			4.3
-		),
-	];
+	let rows =
+		products.length > 0
+			? products
+					.filter((data) => {
+						return curSearch.toLowerCase() === ''
+							? data
+							: data.name
+									.toLowerCase()
+									.includes(curSearch.toLowerCase());
+					})
+					.filter((data) => {
+						return category == '' || category == 'All'
+							? data
+							: category == data.category;
+					})
+					.filter((data) => {
+						if (availability == 'All') {
+							return data;
+						} else if (availability == 'Available') {
+							return data.stocks > 0;
+						} else if (availability == 'Not Available') {
+							return data.stocks == 0;
+						}
+					})
+					.map((value) => {
+						const {
+							key,
+							name,
+							image,
+							category,
+							options,
+							stocks,
+							cost,
+							price,
+							discount,
+						} = value;
+
+						return createData(
+							key,
+							name,
+							image,
+							category,
+							options,
+							stocks,
+							cost,
+							price,
+							discount
+						);
+					})
+			: [];
 
 	const columns = [
 		{
@@ -163,23 +153,61 @@ const Content = () => {
 		},
 		{
 			id: 'cost',
-			label: 'Cost',
+			label: 'Cost (₱)',
 			sort: true,
 			numeric: true,
 		},
 		{
 			id: 'price',
-			label: 'Price',
+			label: 'Price (₱)',
 			sort: true,
 			numeric: true,
 		},
 		{
-			id: 'discounts',
-			label: 'Discounts',
+			id: 'discount',
+			label: 'Discount (₱)',
 			sort: true,
 			numeric: true,
 		},
 	];
+
+	const generatePdf = () => {
+		const doc = new jsPDF();
+		const filteredColumns = columns.filter(
+			(column) => column.id !== 'image'
+		);
+		const filteredColumnLabels = filteredColumns.map(
+			(column) => column.label
+		);
+		const filteredRows = rows.map((row) => {
+			const filteredRow = {};
+			filteredColumns.forEach((column) => {
+				filteredRow[column.id] = row[column.id];
+			});
+			return filteredRow;
+		});
+
+		const filteredBody = filteredRows.map((row) =>
+			filteredColumns.map((column) => row[column.id])
+		);
+
+		doc.autoTable({
+			head: [filteredColumnLabels],
+			body: filteredBody,
+			startY: 20,
+			styles: { overflow: 'linebreak' },
+			didDrawPage: () => {
+				doc.text('Products', 10, 10);
+			},
+		});
+
+		doc.save('Products.pdf');
+	};
+
+	const handleDlClick = (event) => {
+		setAnchorEl(event.currentTarget);
+		generatePdf();
+	};
 
 	return (
 		<Stack
@@ -206,12 +234,16 @@ const Content = () => {
 					justifyContent={{ lg: 'space-between', sm: 'flex-start' }}
 					gap={{ sm: 3, xs: 1 }}
 				>
-					<CusButton
-						variant={'secondary'}
-						label={'Print'}
-						icon={<PrintOutlined />}
+					<CusDownload
+						handleClick={handleDlClick}
+						anchorEl={anchorEl}
 					/>
-					<AddProducts />
+
+					<AddProducts
+						setVariant={setVariant}
+						setMessage={setMessage}
+						setOpenToast={setOpenToast}
+					/>
 				</Stack>
 			</Stack>
 			<Stack
@@ -225,23 +257,65 @@ const Content = () => {
 				gap={3}
 				width={'100%'}
 			>
-				<CusSearch label={'product name'} />
+				<CusSearch
+					label={'product name'}
+					setCurSearch={setCurSearch}
+					curSearch={curSearch}
+				/>
 				<Stack
 					direction={'row'}
 					width={{ sm: '70%', xs: '100%' }}
 					gap={3}
 				>
 					<Stack width={{ lg: '50%', xs: '50%' }}>
-						<CusSelect placeholder={'Category'} />
+						<CusSelect
+							placeholder={'Category'}
+							items={categoryBy}
+							onChange={(e) => {
+								setCategory(e.target.value);
+							}}
+							value={category}
+						/>
 					</Stack>
 					<Stack width={{ lg: '50%', xs: '50%' }}>
-						<CusSelect placeholder={'Status'} />
+						<CusSelect
+							placeholder={'Status'}
+							items={availabilityBy}
+							onChange={(e) => {
+								setAvailability(e.target.value);
+							}}
+							value={availability}
+						/>
 					</Stack>
 				</Stack>
 			</Stack>
 			<CusTable
 				columns={columns}
 				rows={rows}
+				setCurRow={setCurRow}
+				setOpenEdit={setOpenEdit}
+				setOpenDel={setOpenDel}
+			/>
+			<EditProducts
+				setOpenEdit={setOpenEdit}
+				openEdit={openEdit}
+				optEdit={curRow.options}
+				setVariant={setVariant}
+				setMessage={setMessage}
+				setOpenToast={setOpenToast}
+			/>
+			<DeleteProducts
+				setOpenDel={setOpenDel}
+				openDel={openDel}
+				setVariant={setVariant}
+				setMessage={setMessage}
+				setOpenToast={setOpenToast}
+			/>
+			<CusToast
+				variant={variant}
+				message={message}
+				openToast={openToast}
+				setOpenToast={setOpenToast}
 			/>
 		</Stack>
 	);

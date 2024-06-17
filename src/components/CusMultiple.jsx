@@ -4,7 +4,6 @@ import {
 	Autocomplete,
 	TextField,
 	Box,
-	Input,
 	FormControl,
 	InputLabel,
 	FormHelperText,
@@ -18,7 +17,6 @@ const CusMultiple = ({
 	error,
 	value,
 	onChange,
-	type = 'text',
 	onBlur,
 	touch,
 	options,
@@ -53,35 +51,41 @@ const CusMultiple = ({
 					fullWidth
 					options={options}
 					freeSolo
-					renderTags={(val, getTagProps) =>
-						value.map((option, index) => (
-							<Chip
-								variant="outlined"
-								label={option}
-								{...getTagProps({ index })}
-							/>
-						))
+					renderTags={(value, getTagProps) =>
+						value.map((option, index) => {
+							const { key, ...tagProps } = getTagProps({ index });
+							return (
+								<Chip
+									variant="outlined"
+									label={option}
+									key={key}
+									{...tagProps}
+								/>
+							);
+						})
 					}
-					renderInput={(params) => (
-						<TextField
-							{...params}
-							placeholder={placeholder}
-							hiddenLabel
-							size="small"
-							multiline
-							fullWidth
-							sx={{
-								bgcolor: '#FFF',
-								textAlign: 'left',
-								fontSize: 12,
-								'& .MuiOutlinedInput-root': {
-									'& fieldset': {
-										border: 'none',
+					renderInput={(params) => {
+						return (
+							<TextField
+								{...params}
+								placeholder={placeholder}
+								hiddenLabel
+								size="small"
+								multiline
+								fullWidth
+								sx={{
+									bgcolor: '#FFF',
+									textAlign: 'left',
+									fontSize: 12,
+									'& .MuiOutlinedInput-root': {
+										'& fieldset': {
+											border: 'none',
+										},
 									},
-								},
-							}}
-						/>
-					)}
+								}}
+							/>
+						);
+					}}
 				/>
 
 				{error && touch ? (

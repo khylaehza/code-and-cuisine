@@ -7,27 +7,18 @@ import {
 	Stack,
 	Button,
 } from '@mui/material';
-import CusButton from './CusButton';
 import { CloseRounded } from '@mui/icons-material';
 import moment from 'moment';
 import { colors } from '../themes';
 const CusModal = ({
 	label,
 	open,
-	setOpen,
 	content,
 	form,
 	method,
 	updated,
-	setOpt,
+	handleClose,
 }) => {
-	const handleClose = () => {
-		setOpen(false);
-		form.resetForm();
-		form.setFieldValue('options', []);
-		setOpt([]);
-	};
-
 	const handleSubmit = (event) => {
 		event.preventDefault();
 		form.handleSubmit();
@@ -121,11 +112,25 @@ const CusModal = ({
 								justifyContent={'flex-end'}
 								mt={1}
 							>
-								<CusButton
-									label={'Cancel'}
-									variant={'secondary'}
-									action={handleClose}
-								/>
+								<Button
+									type={'button'}
+									sx={{
+										backgroundColor:
+											'rgba(255, 255, 255, 0.6)',
+										color: colors.primary,
+										'&:hover': {
+											backgroundColor: colors.accent,
+											border: `1px solid ${colors.shadow}`,
+										},
+										boxShadow:
+											'0px 0px 8px rgba(217, 217, 217, 1)',
+										border: `1px solid ${colors.shadow}`,
+										padding: '7px 15px',
+									}}
+									onClick={handleClose}
+								>
+									Cancel
+								</Button>
 
 								<Button
 									type={'submit'}

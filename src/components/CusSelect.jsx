@@ -14,7 +14,7 @@ export const CusSelect = ({
 	label,
 	required,
 	error,
-	items = ['1', '2', '3'],
+	items = [],
 	onChange,
 	value,
 	touch,
@@ -27,8 +27,22 @@ export const CusSelect = ({
 				error={error && touch != undefined}
 				fullWidth
 			>
+				<InputLabel
+					id={placeholder}
+					sx={{
+						marginTop: 2,
+						marginLeft: 0,
+						fontSize: 11,
+						'&.Mui-focused': {
+							color: colors.primary,
+						},
+					}}
+				>
+					{placeholder}
+				</InputLabel>
 				<Select
 					name={name}
+					id={placeholder}
 					value={value || ''}
 					onChange={onChange}
 					displayEmpty
@@ -41,6 +55,7 @@ export const CusSelect = ({
 								: 'black',
 					}}
 					disabled={disabled}
+					label={placeholder}
 				>
 					<MenuItem
 						value={''}
@@ -113,7 +128,9 @@ export const CusSelectForm = ({
 						height: 40,
 						fontSize: 12,
 						color:
-							value == '' ? 'rgba(158, 158, 158, 0.5)' : 'black',
+							value == undefined
+								? 'rgba(158, 158, 158, 0.5)'
+								: 'black',
 						':hover': {
 							border: '1px solid rgba(216, 161, 26, 0.3)',
 						},

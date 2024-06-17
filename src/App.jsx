@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from '@mui/material';
 import RoutesNav from './RoutesNav';
+import { DataProvider } from './DataContext';
 function App() {
 	const theme = createTheme({
 		palette: { mode: 'light' },
@@ -67,7 +68,9 @@ function App() {
 
 	return (
 		<ThemeProvider theme={theme}>
-			<RoutesNav />
+			<DataProvider>
+				<RoutesNav />
+			</DataProvider>
 		</ThemeProvider>
 	);
 }

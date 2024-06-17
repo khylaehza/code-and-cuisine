@@ -1,6 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import CusIconButton from './CusIconButton';
+import CusImageViewer from './CusImageViewer';
 import {
 	Box,
 	Table,
@@ -16,12 +17,16 @@ import {
 } from '@mui/material';
 import { EditRounded, DeleteRounded } from '@mui/icons-material';
 import { visuallyHidden } from '@mui/utils';
+import { useData } from '../DataContext';
 
-const CusTable = ({ columns, rows }) => {
+const CusTable = ({ columns, rows, setOpenEdit, setOpenDel }) => {
+	const { setCurRow, curRow } = useData();
 	const [order, setOrder] = useState('asc');
 	const [orderBy, setOrderBy] = useState('name');
 	const [page, setPage] = useState(0);
 	const [rowsPerPage, setRowsPerPage] = useState(5);
+	const [visibleRows, setVisibleRows] = useState([]);
+	const [openImage, setOpenImage] = useState(false);
 
 	const handleRequestSort = (event, property) => {
 		const isAsc = orderBy === property && order === 'asc';
@@ -41,14 +46,14 @@ const CusTable = ({ columns, rows }) => {
 	const emptyRows =
 		page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
-	const visibleRows = useMemo(
-		() =>
-			stableSort(rows, getComparator(order, orderBy)).slice(
-				page * rowsPerPage,
-				page * rowsPerPage + rowsPerPage
-			),
-		[order, orderBy, page, rowsPerPage]
-	);
+	useEffect(() => {
+		const sortedRows = stableSort(rows, getComparator(order, orderBy));
+		const newVisibleRows = sortedRows.slice(
+			page * rowsPerPage,
+			page * rowsPerPage + rowsPerPage
+		);
+		setVisibleRows(newVisibleRows);
+	}, [rows, order, orderBy, page, rowsPerPage]);
 
 	return (
 		<Box sx={{ width: '100%' }}>
@@ -90,10 +95,37 @@ const CusTable = ({ columns, rows }) => {
 											const value = row[column.id];
 											return (
 												<TableCell
-													key={value}
+													key={column.id}
 													align={'center'}
 												>
-													{value}
+													{column.id == 'image' ? (
+														<img
+															src={value}
+															width={100}
+															height={100}
+															style={{
+																borderRadius: 9,
+																objectFit:
+																	'contain',
+																cursor: 'pointer',
+															}}
+															onClick={() => {
+																setCurRow(row);
+																setOpenImage(
+																	true
+																);
+															}}
+														/>
+													) : column.id ==
+													  'options' ? (
+														value ? (
+															value.join(', ')
+														) : (
+															'None'
+														)
+													) : (
+														value
+													)}
 												</TableCell>
 											);
 										})}
@@ -109,8 +141,8 @@ const CusTable = ({ columns, rows }) => {
 													w={24}
 													h={24}
 													action={() => {
-														// setOpenEdit(true);
-														// setCurRow(row);
+														setOpenEdit(true);
+														setCurRow(row);
 													}}
 													icon={
 														<EditRounded
@@ -127,8 +159,8 @@ const CusTable = ({ columns, rows }) => {
 													w={24}
 													h={24}
 													action={() => {
-														// setOpenDel(true);
-														// setCurRow(row);
+														setOpenDel(true);
+														setCurRow(row);
 													}}
 													icon={
 														<DeleteRounded
@@ -154,6 +186,22 @@ const CusTable = ({ columns, rows }) => {
 									<TableCell colSpan={columns.length + 1} />
 								</TableRow>
 							)}
+							{rows.length == 0 && (
+								<TableRow
+									style={{
+										height: 53 * emptyRows,
+									}}
+								>
+									<TableCell
+										colSpan={columns.length + 1}
+										sx={{
+											textAlign: 'center',
+										}}
+									>
+										No available products.
+									</TableCell>
+								</TableRow>
+							)}
 						</TableBody>
 					</Table>
 				</TableContainer>
@@ -167,6 +215,12 @@ const CusTable = ({ columns, rows }) => {
 					onRowsPerPageChange={handleChangeRowsPerPage}
 				/>
 			</Paper>
+			<CusImageViewer
+				src={curRow.image}
+				openImage={openImage}
+				setOpenImage={setOpenImage}
+				alt={curRow.name}
+			/>
 		</Box>
 	);
 };

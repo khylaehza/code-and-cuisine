@@ -5,7 +5,6 @@ import {
 	InputLabel,
 	FormHelperText,
 	InputAdornment,
-	Typography,
 } from '@mui/material';
 import { colors } from '../themes';
 export const CusInput = ({

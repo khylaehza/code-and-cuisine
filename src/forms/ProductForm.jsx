@@ -1,13 +1,23 @@
-import { CusMultiple, CusInput, CusSelectForm } from '../components';
+import { CusMultiple, CusInput, CusSelectForm, CusUpload } from '../components';
 import { Grid, Typography } from '@mui/material';
 
 const ProductForm = ({
 	form,
 	disabled = false,
-	method = 'ADD',
 	opt,
 	setOpt,
+	setImg,
+	fileName,
+	setFileName,
 }) => {
+	const categoryBy = [
+		'Appetizers',
+		'Breads',
+		'Main Courses',
+		'Desserts',
+		'Beverages',
+	];
+
 	return (
 		<Grid
 			container
@@ -16,59 +26,19 @@ const ProductForm = ({
 		>
 			<Grid
 				item
-				xs={2}
-				sm={3}
-				md={3}
-			>
-				<CusInput
-					name="code"
-					label="Product Code"
-					required={true}
-					placeholder={'C1A'}
-					value={form.values.code}
-					onChange={form.handleChange}
-					onBlur={form.handleBlur}
-					error={form.errors.code}
-					touch={form.touched.code}
-					disabled={disabled}
-					startAdornment={
-						<Typography
-							fontSize={12}
-							color={'#CCCCCC'}
-						>
-							e.g.
-						</Typography>
-					}
-				/>
-			</Grid>
-
-			<Grid
-				item
-				xs={4}
-				sm={5}
-				md={9}
+				xs={12}
 			>
 				<CusInput
 					name="name"
 					label="Product Name"
 					required={true}
-					placeholder={
-						'Mushroom Risotto, Mango Salsa, Roasted Pheasant'
-					}
+					placeholder={'e.g. Roasted Peanuts, Crispy Pata, Halo-Halo'}
 					value={form.values.name}
 					onChange={form.handleChange}
 					onBlur={form.handleBlur}
 					error={form.errors.name}
 					touch={form.touched.name}
 					disabled={disabled}
-					startAdornment={
-						<Typography
-							fontSize={12}
-							color={'#CCCCCC'}
-						>
-							e.g.
-						</Typography>
-					}
 				/>
 			</Grid>
 
@@ -89,6 +59,7 @@ const ProductForm = ({
 					error={form.errors.category}
 					touch={form.touched.category}
 					disabled={disabled}
+					items={categoryBy}
 				/>
 			</Grid>
 
@@ -121,7 +92,7 @@ const ProductForm = ({
 				<CusMultiple
 					name="options"
 					label="Options"
-					placeholder={'Type and click enter to add options.'}
+					placeholder={'Type and enter to add options.'}
 					onChange={(event, value) => {
 						form.setFieldValue('options', value);
 						setOpt(value);
@@ -130,8 +101,8 @@ const ProductForm = ({
 					error={form.errors.options}
 					touch={form.touched.options}
 					disabled={disabled}
-					options={[]}
 					value={opt}
+					options={[]}
 				/>
 			</Grid>
 
@@ -223,21 +194,26 @@ const ProductForm = ({
 			</Grid>
 			<Grid
 				item
-				xs={12}
+				xs={1}
+				sm={8}
+				md={12}
 			>
-				<CusInput
+				<CusUpload
 					name="image"
 					label="Product Image"
-					placeholder={'Image'}
+					setImg={setImg}
+					fileName={fileName}
+					setFileName={setFileName}
 					onChange={(e) => {
+						let file = e.target.files[0];
 						form.setFieldValue('image', e.target.files[0]);
-						console.log(e.target.files[0]);
+						setFileName(file.name);
+						setImg(file);
 					}}
 					onBlur={form.handleBlur}
 					error={form.errors.image}
 					touch={form.touched.image}
 					disabled={disabled}
-					type={'file'}
 					required={true}
 				/>
 			</Grid>
