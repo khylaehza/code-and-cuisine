@@ -24,7 +24,7 @@ const Content = () => {
 	const [curSearch, setCurSearch] = useState('');
 	const { products, curRow, setCurRow } = useData();
 	const [category, setCategory] = useState('All');
-	const [availability, setAvailability] = useState('Available');
+	const [availability, setAvailability] = useState('All');
 	const [openDel, setOpenDel] = useState(false);
 	const [openEdit, setOpenEdit] = useState(false);
 
@@ -32,7 +32,6 @@ const Content = () => {
 	const [variant, setVariant] = useState('');
 	const [message, setMessage] = useState('');
 
-	const [sortType, setSortType] = useState('Ascending');
 	const [anchorEl, setAnchorEl] = useState(null);
 
 	const categoryBy = [
