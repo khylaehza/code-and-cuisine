@@ -7,6 +7,7 @@ const RoutesNav = () => {
 			<Routes>
 				<Route
 					path="/products"
+					index
 					element={<ProductsPage />}
 				/>
 				<Route
@@ -15,8 +16,21 @@ const RoutesNav = () => {
 				/>
 				<Route
 					path="/"
-					index
 					element={<DashboardPage />}
+				/>
+				<Route
+					path="*"
+					element={
+						<div
+							style={{
+								color: 'black',
+								display: 'flex',
+								alignItems: 'center',
+							}}
+						>
+							Page Not Found
+						</div>
+					}
 				/>
 			</Routes>
 		</Router>

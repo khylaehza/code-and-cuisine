@@ -98,6 +98,7 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 			},
 			location: '/',
 			color: location.pathname == '/' ? colors.secondary : colors.shadow,
+			disabled: true,
 		},
 		{
 			name: 'Order',
@@ -115,6 +116,7 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 				location.pathname == '/order'
 					? colors.secondary
 					: colors.shadow,
+			disabled: true,
 		},
 		{
 			name: 'Products',
@@ -136,6 +138,7 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 				location.pathname == '/products'
 					? colors.secondary
 					: colors.shadow,
+			disabled: false,
 		},
 	];
 
@@ -178,6 +181,7 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 								px: openNav ? 6 : 3,
 							}}
 							onClick={nav.action}
+							disabled={nav.disabled}
 						>
 							<ListItemIcon
 								sx={{
