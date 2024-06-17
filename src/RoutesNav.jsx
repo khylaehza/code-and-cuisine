@@ -6,7 +6,7 @@ const RoutesNav = () => {
 		<Router>
 			<Routes>
 				<Route
-					path="/products"
+					path="/"
 					index
 					element={<ProductsPage />}
 				/>
@@ -15,7 +15,7 @@ const RoutesNav = () => {
 					element={<OrderPage />}
 				/>
 				<Route
-					path="/"
+					path="/dashboard"
 					element={<DashboardPage />}
 				/>
 				<Route

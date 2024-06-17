@@ -94,10 +94,13 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 					<DashboardOutlined sx={{ color: colors.shadow }} />
 				),
 			action: () => {
-				navigate('/');
+				navigate('/dashboard');
 			},
-			location: '/',
-			color: location.pathname == '/' ? colors.secondary : colors.shadow,
+			location: '/dashboard',
+			color:
+				location.pathname == '/dashboard'
+					? colors.secondary
+					: colors.shadow,
 			disabled: true,
 		},
 		{
@@ -121,7 +124,7 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 		{
 			name: 'Products',
 			icon:
-				location.pathname == '/products' ? (
+				location.pathname == '/' ? (
 					<Inventory2Rounded
 						sx={{ color: colors.secondary, fontSize: 21 }}
 					/>
@@ -131,13 +134,10 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 					/>
 				),
 			action: () => {
-				navigate('/products');
+				navigate('/');
 			},
-			location: '/products',
-			color:
-				location.pathname == '/products'
-					? colors.secondary
-					: colors.shadow,
+			location: '/',
+			color: location.pathname == '/' ? colors.secondary : colors.shadow,
 			disabled: false,
 		},
 	];
