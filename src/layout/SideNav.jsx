@@ -88,7 +88,7 @@ const SideNav = ({ sideNavWidth, openNav, sideNavClose, sideNavOpen }) => {
 		{
 			name: 'Dashboard',
 			icon:
-				location.pathname == '/' ? (
+				location.pathname == '/dashboard' ? (
 					<DashboardRounded sx={{ color: colors.secondary }} />
 				) : (
 					<DashboardOutlined sx={{ color: colors.shadow }} />
